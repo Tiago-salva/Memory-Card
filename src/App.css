@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'StardewFont';
+    src: url('/fonts/StardewValley.ttf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'StardewFont', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-image: url("https://i.pinimg.com/originals/95/26/f0/9526f08c1e26dcb4f6b9afd9d76af8ab.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 40px 20px;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+
+}
+
+#root,
+.characters-cards-container {
+    height: 100%;
+}
+
+.message {
+    text-align: center;
+    color: #c3c3c3;
+    font-size: 2rem;
+    letter-spacing: 2px;
+}
+
+.characters-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.character-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.character-card-frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 280px;
+    height: 240px;
+    overflow: hidden;
+    background-image: url("/src/components/fr.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.character-card-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    z-index: 0;
+    margin-bottom: 40px;
+}
+
+.character-card-name {
+    position: absolute;
+    bottom: 15px;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.progress-text {
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+}
