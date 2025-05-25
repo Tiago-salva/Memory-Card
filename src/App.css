@@ -3,6 +3,11 @@
     src: url('/fonts/StardewValley.ttf') format('truetype');
 }
 
+:root {
+    --btn-font-color: #ce5252;
+    --btn-background-color: #ffd789;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -11,7 +16,7 @@
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     background-image: url("https://i.pinimg.com/originals/95/26/f0/9526f08c1e26dcb4f6b9afd9d76af8ab.png");
     background-position: center;
     background-repeat: no-repeat;
@@ -20,27 +25,120 @@ body {
 }
 
 #root {
+    min-height: calc(100vh - 80px);
     display: flex;
     flex-direction: column;
-
+    gap: 50px;
 }
 
-#root,
+.home-container,
 .characters-cards-container {
-    height: 100%;
+    flex-grow: 1;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 50px;
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.home-title {
+    transform: translateY(-600px);
+}
+
+.home-title-displayed {
+    width: 90%;
+    max-width: 700px;
+    height: auto;
+    transition: 3s transform ease;
+    transform: translateY(0px);
+    animation: breathe 1s linear 3s;
+}
+
+.difficulty-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+@keyframes show {
+    0% {
+        visibility: hidden;
+    }
+
+    100% {
+        visibility: visible;
+    }
+}
+
+.difficulty-btn-easy,
+.difficulty-btn-medium,
+.difficulty-btn-hard {
+    visibility: hidden;
+    width: 200px;
+    height: 155px;
+    padding-bottom: 30px;
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    color: var(--btn-font-color);
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: show 1s ease normal forwards;
+}
+
+.difficulty-btn-easy {
+    background-image: url("/src/img/easy-btn-background.png");
+    animation-delay: 4s;
+}
+
+.difficulty-btn-medium {
+    background-image: url("/src/img/medium-btn-background.png");
+    animation-delay: 4.2s;
+}
+
+.difficulty-btn-hard {
+    background-image: url("/src/img/hard-btn-background.png");
+    animation-delay: 4.4s;
 }
 
 .message {
     text-align: center;
-    color: #c3c3c3;
-    font-size: 2rem;
+    color: white;
+    font-size: 3.5rem;
     letter-spacing: 2px;
 }
 
 .characters-cards-container {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    align-content: center;
+    justify-items: center; */
     display: flex;
     justify-content: center;
     align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
     gap: 40px;
 }
 
@@ -88,4 +186,34 @@ body {
     font-size: 2rem;
     color: white;
     text-align: center;
+}
+
+
+@media(max-width: 600px) {
+
+    .difficulty-btn-easy,
+    .difficulty-btn-medium,
+    .difficulty-btn-hard {
+        width: 160px;
+        height: 120px;
+        font-size: 2rem;
+        font-weight: 500;
+    }
+
+    .character-card-frame {
+        width: 235px;
+        height: 200px;
+    }
+
+    .character-card-img {
+        width: 120px;
+        height: auto;
+        margin-bottom: 28px;
+    }
+
+    .character-card-name {
+        bottom: 15px;
+        font-size: 1.5rem;
+    }
+
 }
