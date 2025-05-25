@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Home from "./components/Home.jsx";
 import Card from "./components/Card.jsx";
 
 function App() {
@@ -13,14 +14,47 @@ function App() {
   const [selectedCharacters, setSelectedCharacters] = useState([]);
 
   const [message, setMessage] = useState("Vamos a jugar!");
+
+  // Puntaje actual y puntaje mas alto
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
 
-  function shuffleArray(array) {
-    return [...array].sort(() => Math.random() - 0.5);
-  }
+  // Juego
+  const [gameStarted, setGameStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState("Easy");
+  const [numberOfCards, setNumberOfCards] = useState(0);
+  const [numberOfHits, setNumberOfHits] = useState(10);
 
-  function selectRandomCharacters(data, number, updated) {
+  useEffect(() => {
+    if (difficulty === "Easy") {
+      setNumberOfCards(3);
+      setNumberOfHits(5);
+    } else if (difficulty === "Medium") {
+      setNumberOfCards(5);
+      setNumberOfHits(10);
+    } else if (difficulty === "Hard") {
+      setNumberOfCards(8);
+      setNumberOfHits(16);
+    }
+  }, [difficulty]);
+
+  useEffect(() => {
+    fetch("../public/characters.json")
+      .then((response) => response.json())
+      .then((data) => setCharacters(data));
+  }, []);
+
+  useEffect(() => {
+    if (characters.length > 0 && numberOfCards > 0) {
+      selectRandomCharacters(characters, numberOfCards);
+    }
+  }, [characters, numberOfCards]);
+
+  useEffect(() => {
+    checkWinner();
+  }, [score]);
+
+  function selectRandomCharacters(data, numberOfCards, updated) {
     // Son los cards que no fueron seleccionados
     const charactersNotSelected = data.filter(
       (character) =>
@@ -28,12 +62,6 @@ function App() {
           (selected) => selected.name === character.name
         )
     );
-
-    // Si no hay mas personajes para seleccionar,
-    if (charactersNotSelected.length === 0) {
-      restartGame("Felicitaciones! Haz ganado");
-      return;
-    }
 
     console.log(charactersNotSelected);
 
@@ -50,13 +78,17 @@ function App() {
 
     // Se eligen el resto de cards
     const others = [];
-    while (others.length < number - 1 && pool.length > 0) {
+    while (others.length < numberOfCards - 1 && pool.length > 0) {
       const randomIndex = Math.floor(Math.random() * pool.length);
       others.push(pool.splice(randomIndex, 1)[0]);
     }
 
     const finalCards = shuffleArray([guaranteedNew, ...others]);
     setRandomCharacters(finalCards);
+  }
+
+  function shuffleArray(array) {
+    return [...array].sort(() => Math.random() - 0.5);
   }
 
   function handleClick(index) {
@@ -75,49 +107,50 @@ function App() {
       const updated = [...selectedCharacters, clickedCharacter];
       setScore(score + 1);
       setSelectedCharacters(updated);
-      selectRandomCharacters(characters, 3, updated);
+      selectRandomCharacters(characters, numberOfCards, updated);
+    }
+  }
 
-      // setSelectedCharacters((prev) => {
-      //   const updated = [...prev, clickedCharacter];
-      //   selectRandomCharacters(characters, 3, updated);
-      //   return updated;
-      // });
+  function checkWinner() {
+    if (score === numberOfHits) {
+      restartGame("Felicitaciones! Haz ganado");
+      return;
     }
   }
 
   function restartGame(message) {
     setMessage(message);
     setScore(0);
-    selectRandomCharacters(characters, 3);
+    selectRandomCharacters(characters, numberOfCards);
     setSelectedCharacters([]);
   }
 
-  useEffect(() => {
-    fetch("../public/characters.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setCharacters(data);
-        selectRandomCharacters(data, 3);
-      });
-  }, []);
-
   return (
     <>
-      <h1 className="message">{message}</h1>
-      <div className="characters-cards-container">
-        {randomCharacters.map((character, index) => (
-          <Card
-            key={index}
-            index={index}
-            onClick={handleClick}
-            image={character.image}
-            name={character.name}
-          />
-        ))}
-      </div>
-      <p className="progress-text">
-        {score} / {characters.length}
-      </p>
+      {!gameStarted ? (
+        <Home
+          setGameStarted={setGameStarted}
+          setDifficulty={setDifficulty}
+        ></Home>
+      ) : (
+        <>
+          <h1 className="message">{message}</h1>
+          <div className="characters-cards-container">
+            {randomCharacters.map((character, index) => (
+              <Card
+                key={index}
+                index={index}
+                onClick={handleClick}
+                image={character.image}
+                name={character.name}
+              />
+            ))}
+          </div>
+          <p className="progress-text">
+            {score} / {numberOfHits}
+          </p>
+        </>
+      )}
     </>
   );
 }
