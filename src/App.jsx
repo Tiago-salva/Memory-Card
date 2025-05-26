@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Home from "./components/Home.jsx";
 import Card from "./components/Card.jsx";
+import Modal from "./components/Modal.jsx";
 
 function App() {
   // Se guarda la data del fetch
@@ -19,8 +20,11 @@ function App() {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
 
+  const [newCharacter, setNewCharacter] = useState(false);
+
   // Juego
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [numberOfCards, setNumberOfCards] = useState(0);
   const [numberOfHits, setNumberOfHits] = useState(10);
@@ -51,7 +55,7 @@ function App() {
   }, [characters, numberOfCards]);
 
   useEffect(() => {
-    checkWinner();
+    if (score > bestScore) setBestScore(score);
   }, [score]);
 
   function selectRandomCharacters(data, numberOfCards, updated) {
@@ -92,6 +96,7 @@ function App() {
   }
 
   function handleClick(index) {
+    setNewCharacter(false);
     const clickedCharacter = randomCharacters[index];
     console.log(clickedCharacter);
 
@@ -100,41 +105,59 @@ function App() {
     );
 
     if (alreadySelected) {
-      restartGame("Perdiste! Ya habias seleccionado ese personaje");
+      setMessage("Haz perdido");
+      setGameFinished(true);
     } else {
-      setMessage("Muy bien! Todavia no habias seleccionado ese personaje");
-      // Se actualizan los personajes ya seleccionados
       const updated = [...selectedCharacters, clickedCharacter];
-      setScore(score + 1);
-      setSelectedCharacters(updated);
-      selectRandomCharacters(characters, numberOfCards, updated);
+      const nextScore = score + 1;
+
+      if (nextScore === numberOfHits) {
+        setScore(nextScore);
+        setSelectedCharacters(updated);
+        setMessage("Haz ganado!");
+        setGameFinished(true);
+        setNewCharacter(true);
+        return;
+      } else {
+        setScore(nextScore);
+        setSelectedCharacters(updated);
+        selectRandomCharacters(characters, numberOfCards, updated);
+      }
     }
   }
 
-  function checkWinner() {
-    if (score === numberOfHits) {
-      restartGame("Felicitaciones! Haz ganado");
-      return;
-    }
-  }
-
-  function restartGame(message) {
-    setMessage(message);
+  function restartGame() {
     setScore(0);
     selectRandomCharacters(characters, numberOfCards);
     setSelectedCharacters([]);
+    setGameFinished(false);
+    setGameStarted(false);
   }
+
+  useEffect(() => {
+    setNewCharacter(true);
+  }, [selectedCharacters]);
 
   return (
     <>
+      {gameFinished && (
+        <Modal
+          gameFinished={gameFinished}
+          message={message}
+          onClick={restartGame}
+          score={score}
+        ></Modal>
+      )}
       {!gameStarted ? (
         <Home
+          gameStarted={gameStarted}
           setGameStarted={setGameStarted}
           setDifficulty={setDifficulty}
         ></Home>
       ) : (
-        <>
-          <h1 className="message">{message}</h1>
+        <main className="game-container">
+          <p className="best-score">Best score: {bestScore}</p>
+          <img src="/src/img/title.png" className="game-title"></img>
           <div className="characters-cards-container">
             {randomCharacters.map((character, index) => (
               <Card
@@ -143,13 +166,14 @@ function App() {
                 onClick={handleClick}
                 image={character.image}
                 name={character.name}
+                newCharacter={newCharacter}
               />
             ))}
           </div>
           <p className="progress-text">
             {score} / {numberOfHits}
           </p>
-        </>
+        </main>
       )}
     </>
   );
