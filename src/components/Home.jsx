@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Home({ setGameStarted, setDifficulty }) {
+export default function Home({ gameStarted, setGameStarted, setDifficulty }) {
   const [showTitle, setShowTitle] = useState(false);
   const difficulties = [
     {
@@ -33,7 +33,7 @@ export default function Home({ setGameStarted, setDifficulty }) {
     <div className="home-container">
       <img
         src="/src/img/title.png"
-        className={showTitle ? "home-title-displayed" : "home-title"}
+        className={`${showTitle ? "home-title-displayed" : "home-title"}`}
       ></img>
       <div className="difficulty-container">
         {difficulties.map((btn) => (
