@@ -5,30 +5,33 @@ import Card from "./components/Card.jsx";
 import Modal from "./components/Modal.jsx";
 
 function App() {
-  // Se guarda la data del fetch
+  // Data from the fetch
   const [characters, setCharacters] = useState([]);
 
-  // Se guarda los cards generados aleatoriamente
   const [randomCharacters, setRandomCharacters] = useState([]);
 
-  // Se guarda los cards ya seleccionados
   const [selectedCharacters, setSelectedCharacters] = useState([]);
 
-  const [message, setMessage] = useState("Vamos a jugar!");
+  // Message that will display at the end of the game
+  const [message, setMessage] = useState("");
 
-  // Puntaje actual y puntaje mas alto
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
 
+  // State that changes if a new character was added
   const [newCharacter, setNewCharacter] = useState(false);
 
-  // Juego
   const [gameStarted, setGameStarted] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
+
+  // Number of cards that will display
   const [numberOfCards, setNumberOfCards] = useState(0);
+
+  // Number of correct answers to win
   const [numberOfHits, setNumberOfHits] = useState(10);
 
+  // UseEffect's
   useEffect(() => {
     if (difficulty === "Easy") {
       setNumberOfCards(3);
@@ -58,8 +61,12 @@ function App() {
     if (score > bestScore) setBestScore(score);
   }, [score]);
 
+  useEffect(() => {
+    setNewCharacter(true);
+  }, [selectedCharacters]);
+
+  // Functions
   function selectRandomCharacters(data, numberOfCards, updated) {
-    // Son los cards que no fueron seleccionados
     const charactersNotSelected = data.filter(
       (character) =>
         !(updated || selectedCharacters).some(
@@ -67,20 +74,15 @@ function App() {
         )
     );
 
-    console.log(charactersNotSelected);
-
-    // Se consigue un card no seleccionado aleatoriamente
+    // At least 1 card that wasnt selected
     const guaranteedNew =
       charactersNotSelected[
         Math.floor(Math.random() * charactersNotSelected.length)
       ];
-
-    // Se consiguen el resto de cards excluyendo el guaranteedNew
+    // Get the rest of the cards
     const pool = data.filter(
       (character) => character.name !== guaranteedNew.name
     );
-
-    // Se eligen el resto de cards
     const others = [];
     while (others.length < numberOfCards - 1 && pool.length > 0) {
       const randomIndex = Math.floor(Math.random() * pool.length);
@@ -88,6 +90,7 @@ function App() {
     }
 
     const finalCards = shuffleArray([guaranteedNew, ...others]);
+
     setRandomCharacters(finalCards);
   }
 
@@ -98,14 +101,13 @@ function App() {
   function handleClick(index) {
     setNewCharacter(false);
     const clickedCharacter = randomCharacters[index];
-    console.log(clickedCharacter);
 
     const alreadySelected = selectedCharacters.some(
       (character) => character.name === clickedCharacter.name
     );
 
     if (alreadySelected) {
-      setMessage("Haz perdido");
+      setMessage("You lose!");
       setGameFinished(true);
     } else {
       const updated = [...selectedCharacters, clickedCharacter];
@@ -114,7 +116,7 @@ function App() {
       if (nextScore === numberOfHits) {
         setScore(nextScore);
         setSelectedCharacters(updated);
-        setMessage("Haz ganado!");
+        setMessage("You won!");
         setGameFinished(true);
         setNewCharacter(true);
         return;
@@ -133,10 +135,6 @@ function App() {
     setGameFinished(false);
     setGameStarted(false);
   }
-
-  useEffect(() => {
-    setNewCharacter(true);
-  }, [selectedCharacters]);
 
   return (
     <>
