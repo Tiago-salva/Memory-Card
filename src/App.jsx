@@ -46,7 +46,7 @@ function App() {
   }, [difficulty]);
 
   useEffect(() => {
-    fetch("../public/characters.json")
+    fetch("/characters.json")
       .then((response) => response.json())
       .then((data) => setCharacters(data));
   }, []);
@@ -155,7 +155,7 @@ function App() {
       ) : (
         <main className="game-container">
           <p className="best-score">Best score: {bestScore}</p>
-          <img src="/src/img/title.png" className="game-title"></img>
+          <img src="/img/title.png" className="game-title"></img>
           <div className="characters-cards-container">
             {randomCharacters.map((character, index) => (
               <Card

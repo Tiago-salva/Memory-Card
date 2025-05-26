@@ -10,11 +10,7 @@ export default function Modal({ gameFinished, message, onClick, score }) {
       >
         <h2 className="modal-title">{message}</h2>
         <p className="modal-final-score">{`Your final score is: ${score}`}</p>
-        <img
-          src="/src/img/chicken.png"
-          className="chicken-img"
-          alt="chicken"
-        ></img>
+        <img src="/img/chicken.png" className="chicken-img" alt="chicken"></img>
         <button className="modal-btn" onClick={() => onClick()}>
           Restart
         </button>

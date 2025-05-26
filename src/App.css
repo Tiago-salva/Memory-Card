@@ -54,7 +54,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url("/src/img/frame-modal.png");
+    background-image: url("/img/frame-modal.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -76,7 +76,7 @@ body {
     font-size: 2.5rem;
     color: rgb(56, 56, 56);
     letter-spacing: 1px;
-    background-image: url("/src/img/frame-name.png");
+    background-image: url("/img/frame-name.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -104,7 +104,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 2rem;
-    background-image: url("/src/img/button-frame.png");
+    background-image: url("/img/button-frame.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -196,17 +196,17 @@ body {
 }
 
 .difficulty-btn-easy {
-    background-image: url("/src/img/easy-btn-background.png");
+    background-image: url("/img/easy-btn-background.png");
     animation-delay: 4s;
 }
 
 .difficulty-btn-medium {
-    background-image: url("/src/img/medium-btn-background.png");
+    background-image: url("/img/medium-btn-background.png");
     animation-delay: 4.2s;
 }
 
 .difficulty-btn-hard {
-    background-image: url("/src/img/hard-btn-background.png");
+    background-image: url("/img/hard-btn-background.png");
     animation-delay: 4.4s;
 }
 
@@ -280,7 +280,7 @@ body {
     width: 280px;
     height: 240px;
     overflow: hidden;
-    background-image: url("/src/img/frame.png");
+    background-image: url("/img/frame.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

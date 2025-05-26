@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Home({ gameStarted, setGameStarted, setDifficulty }) {
+export default function Home({ setGameStarted, setDifficulty }) {
   const [showTitle, setShowTitle] = useState(false);
   const difficulties = [
     {
@@ -32,7 +32,7 @@ export default function Home({ gameStarted, setGameStarted, setDifficulty }) {
   return (
     <div className="home-container">
       <img
-        src="/src/img/title.png"
+        src="/img/title.png"
         className={`${showTitle ? "home-title-displayed" : "home-title"}`}
       ></img>
       <div className="difficulty-container">
